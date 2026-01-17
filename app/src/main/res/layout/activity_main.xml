@@ -21,7 +21,7 @@
         android:id="@+id/avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        tools:srcCompat="@sample/posts.json/data/authorAvatar"
+        app:srcCompat="@drawable/netology_48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -132,7 +132,6 @@
         android:layout_marginTop="@dimen/common_offset"
         app:layout_constraintTop_toBottomOf="@+id/bottomBarrier"
         app:layout_constraintEnd_toStartOf="@+id/watchers_count"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
