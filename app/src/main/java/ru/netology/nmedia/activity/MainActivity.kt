@@ -1,12 +1,15 @@
 package ru.netology.nmedia.activity
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
@@ -65,12 +68,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.edited.observe(this) { post ->
+            binding.editGroup.visibility =
+                if (post.id != 0L) View.VISIBLE else View.GONE
+
             if (post.id != 0L) {
                 with(binding.content) {
                     setText(post.content)
                     AndroidUtils.showKeyboard(this)
                 }
+                binding.editPreview.text = post.content
+                binding.editPreview.visibility = View.VISIBLE
+            } else {
+                with(binding.content) {
+                    setText("")
+                    AndroidUtils.hideKeyboard(this)
+                }
+                binding.editPreview.text = ""
+                binding.editPreview.visibility = View.GONE
             }
+        }
+
+        binding.editCancel.setOnClickListener {
+            viewModel.cancelEdit()
         }
 
         binding.save.setOnClickListener {
