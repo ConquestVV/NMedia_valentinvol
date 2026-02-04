@@ -57,15 +57,12 @@ class PostViewHolder(
             author.text = post.author
             published.text = post.published
             content.text = post.content
-            if (post.likedByMe) {
-                likeImg?.setImageResource(R.drawable.ic_liked_24)
-            } else {
-                likeImg?.setImageResource(R.drawable.ic_like_24)
-            }
 
-            likeCount?.text = formatCount(post.likes)
+            likeImg.isChecked = post.likedByMe
 
-            shareCount?.text = formatCount(post.shares)
+            likeImg?.text = formatCount(post.likes)
+
+            shareImg?.text = formatCount(post.shares)
 
             watchersCount?.text = formatCount(post.watches)
 

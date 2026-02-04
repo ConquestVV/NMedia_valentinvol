@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style
+        name="Widget.AppTheme.LikeCheckbox"
+        parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name = "buttonTint">@color/like_color_selector</item>
+    </style>
+
+    <style
+        name="Widget.AppTheme.LikeButton"
+        parent="Widget.Material3.Button.TextButton.Icon">
+        <item name = "iconTint">@color/like_color_selector</item>
+    </style>
+
+    <style
+        name="Widget.AppTheme.IconButton"
+        parent="Widget.Material3.Button.TextButton.Icon">
+        <item name = "iconTint">@color/black</item>
+    </style>
+
+</resources>
