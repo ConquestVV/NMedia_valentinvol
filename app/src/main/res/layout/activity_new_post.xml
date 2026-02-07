@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/common_offset"
+        android:hint="@string/post_text"
         android:layout_marginBottom="80dp"
         android:background="@android:color/transparent"
         android:gravity="start|top"
@@ -26,6 +27,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add"
+        android:contentDescription="Save/add post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottomAppBar"
