@@ -136,7 +136,9 @@ class PostRepositoryInMemory: PostRepository {
 
     override fun save(post: Post) {
         posts = if (post.id == 0L) {
-            listOf(post.copy(id = nextId++)) + posts
+            listOf(post.copy(
+                id = nextId++,
+                video = "https://rutube.ru/video/6550a91e7e523f9503bed47e4c46d0cb")) + posts
         } else {
             posts.map {
                 if (it.id != post.id) it else it.copy(content = post.content)
