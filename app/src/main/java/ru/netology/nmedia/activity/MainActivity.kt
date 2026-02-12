@@ -1,11 +1,16 @@
 package ru.netology.nmedia.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -54,6 +59,12 @@ class MainActivity : AppCompatActivity() {
             override fun onRemove(post: Post) {
                 viewModel.remove(post.id)
             }
+
+            override fun onVideoClick(video: String) {
+                runCatching {
+                    startActivity(Intent(Intent.ACTION_VIEW, video.toUri()))
+                }
+            }
         })
         binding.list.adapter = adapter
 
@@ -67,49 +78,30 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.edited.observe(this) { post ->
-            binding.editGroup.visibility =
-                if (post.id != 0L) View.VISIBLE else View.GONE
+        val newPostLauncher = registerForActivityResult(NewPostResultContract) { result ->
+            result ?: return@registerForActivityResult
+            viewModel.save(result)
+        }
 
-            if (post.id != 0L) {
-                with(binding.content) {
-                    setText(post.content)
-                    AndroidUtils.showKeyboard(this)
-                }
-                binding.editPreview.text = post.content
-                binding.editPreview.visibility = View.VISIBLE
-            } else {
-                with(binding.content) {
-                    setText("")
-                    AndroidUtils.hideKeyboard(this)
-                }
-                binding.editPreview.text = ""
-                binding.editPreview.visibility = View.GONE
+        viewModel.edited.observe(this){ post ->
+            if (post.id == 0L) return@observe
+
+            val intent = Intent(this, NewPostActivity::class.java).apply {
+                putExtra("postId", post.id)
+                putExtra(Intent.EXTRA_TEXT, post.content)
             }
+
+            newPostLauncher.launch(intent)
         }
 
-        binding.editCancel.setOnClickListener {
-            viewModel.cancelEdit()
+
+        binding.add.setOnClickListener {
+            val intent = Intent(this, NewPostActivity::class.java)
+            newPostLauncher.launch(intent)
         }
 
-        binding.save.setOnClickListener {
-            with(binding.content) {
-                if (text.isNullOrBlank()) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        context.getString(R.string.error_empty_content),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
 
-                viewModel.save(text.toString())
 
-                setText("")
-                clearFocus()
-                AndroidUtils.hideKeyboard(this)
-            }
-        }
 
     }
 }

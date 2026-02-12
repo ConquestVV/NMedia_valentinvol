@@ -45,6 +45,7 @@
         style="?attr/materialIconButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="More button"
         app:iconTint="@color/black"
         app:icon="@drawable/baseline_more_vert_24"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,9 +67,35 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 
+    <ImageView
+        android:id="@+id/video"
+        android:adjustViewBounds="true"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/masha_img"
+        app:layout_constraintTop_toBottomOf="@id/content"/>
+
+    <ImageView
+        android:id="@+id/ic_play_video"
+        android:adjustViewBounds="true"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_play"
+        app:layout_constraintBottom_toBottomOf="@id/video"
+        app:layout_constraintStart_toStartOf="@id/video"
+        app:layout_constraintTop_toTopOf="@id/video"
+        app:layout_constraintEnd_toEndOf="@id/video" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/video_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="video,ic_play_video" />
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/bottomBarrier"
-        app:constraint_referenced_ids="content"
+        app:constraint_referenced_ids="content, video"
         app:barrierDirection="bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -80,8 +107,8 @@
         android:checkable="true"
         android:layout_marginTop="@dimen/common_offset"
         app:layout_constraintTop_toBottomOf="@+id/bottomBarrier"
-        android:minHeight="0dp"
-        android:minWidth="0dp"
+        android:minHeight="48dp"
+        android:minWidth="48dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="5"/>
@@ -97,8 +124,8 @@
         app:layout_constraintTop_toBottomOf="@+id/bottomBarrier"
         app:layout_constraintStart_toEndOf="@+id/like_img"
         android:layout_marginStart="@dimen/common_offset"
-        android:minHeight="0dp"
-        android:minWidth="0dp"
+        android:minHeight="48dp"
+        android:minWidth="48dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="2"/>
@@ -109,7 +136,10 @@
         android:src="@drawable/watchers_img_24dp"
         android:background="@android:color/transparent"
         android:layout_marginEnd="4dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:layout_marginTop="@dimen/common_offset"
+        android:contentDescription="icon for watchers"
         app:layout_constraintTop_toBottomOf="@+id/bottomBarrier"
         app:layout_constraintEnd_toStartOf="@+id/watchers_count"
         android:layout_width="wrap_content"
