@@ -23,11 +23,12 @@ class PostRepositoryFilesImpl(private val context: Context): PostRepository {
 
     init {
         val file = context.filesDir.resolve(FILENAME)
-        if (file.exists())
-        context.openFileInput(FILENAME).bufferedReader().use {
-            posts = gson.fromJson(it, token)
-            nextId = (posts.maxOfOrNull { it.id } ?: 0) + 1
-            data.value = posts
+        if (file.exists()) {
+            context.openFileInput(FILENAME).bufferedReader().use {
+                posts = gson.fromJson(it, token)
+                nextId = (posts.maxOfOrNull { it.id } ?: 0) + 1
+                data.value = posts
+            }
         }
     }
 
