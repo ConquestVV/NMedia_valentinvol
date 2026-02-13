@@ -43,9 +43,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         val viewModel: PostViewModel by viewModels()
+
+        val newPostLauncher = registerForActivityResult(NewPostResultContract) { result ->
+            result ?: return@registerForActivityResult
+
+            val (id, content) = result
+
+            if (id == 0L) {
+                viewModel.save(content)
+            } else {
+                viewModel.edit(id = id, content = content)
+            }
+        }
+
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
-                viewModel.edit(post)
+//                viewModel.edit(post)
+                newPostLauncher.launch(post)
             }
 
             override fun onLike(post: Post) {
@@ -78,30 +92,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val newPostLauncher = registerForActivityResult(NewPostResultContract) { result ->
-            result ?: return@registerForActivityResult
-            viewModel.save(result)
-        }
-
-        viewModel.edited.observe(this){ post ->
-            if (post.id == 0L) return@observe
-
-            val intent = Intent(this, NewPostActivity::class.java).apply {
-                putExtra("postId", post.id)
-                putExtra(Intent.EXTRA_TEXT, post.content)
-            }
-
-            newPostLauncher.launch(intent)
-        }
-
-
         binding.add.setOnClickListener {
-            val intent = Intent(this, NewPostActivity::class.java)
-            newPostLauncher.launch(intent)
+
+            newPostLauncher.launch(null)
         }
-
-
-
-
     }
 }
