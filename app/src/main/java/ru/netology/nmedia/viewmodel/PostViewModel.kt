@@ -51,12 +51,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 //        edited.value = post
 //    }
 
-    fun edit(id: Long, content: String) {
-        val text = content.trim()
-        if (text.isBlank()) return
+//    fun edit(id: Long, content: String) {
+//        val text = content.trim()
+//        if (text.isBlank()) return
+//
+//        val post = data.value?.find { it.id == id } ?: return
+//        repository.save(post.copy(content = text))
+//    }
 
-        val post = data.value?.find { it.id == id } ?: return
-        repository.save(post.copy(content = text))
+    fun edit(post: Post) {
+        edited.value = post
     }
 
     fun cancelEdit(){
