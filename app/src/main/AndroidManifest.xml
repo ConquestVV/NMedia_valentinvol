@@ -12,9 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NMedia">
         <activity
-            android:name=".fragment.NewPostFragment"
-            android:exported="false" />
-        <activity
             android:name=".activity.AppActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
