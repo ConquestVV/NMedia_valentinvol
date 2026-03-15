@@ -38,11 +38,11 @@ class AppActivity : AppCompatActivity() {
 
         requestNotificationsPermission()
 
-        Log.d("FCMService", "onCreate started") // ← этот лог видишь?
+        Log.d("FCMService", "onCreate started")
 
         FirebaseMessaging.getInstance().token
             .addOnCompleteListener { task ->
-                Log.d("FCMService", "Listener called") // ← а этот?
+                Log.d("FCMService", "Listener called")
                 if (task.isSuccessful) {
                     Log.d("FCMService", "Token: ${task.result}")
                 } else {
