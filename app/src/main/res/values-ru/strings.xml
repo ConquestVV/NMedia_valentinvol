@@ -8,5 +8,6 @@
     <string name="error_empty_content">Контент не может быть пустым</string>
     <string name="menu_edit">Редактировать</string>
     <string name="chooser_share_post">Поделиться</string>
+    <string name="google_play_unavailable">Google Api недоступен</string>
     <string name="edit_post">Редактировать пост</string>
 </resources>

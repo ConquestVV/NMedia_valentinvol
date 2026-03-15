@@ -7,5 +7,6 @@
     <string name="error_empty_content">Content can\'t be empty</string>
     <string name="menu_edit">Edit</string>
     <string name="chooser_share_post">Share post</string>
+    <string name="google_play_unavailable">Google Api Unavailable</string>
     <string name="edit_post">Edit post</string>
 </resources>

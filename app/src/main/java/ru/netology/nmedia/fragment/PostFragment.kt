@@ -66,7 +66,7 @@ class PostFragment : Fragment() {
                  }
 
                 shareImg.setOnClickListener {
-//                    viewModel.share(post.id)
+                    viewModel.share(post.id)
                     val intent = Intent().apply {
                         action = Intent.ACTION_SEND
                         putExtra(Intent.EXTRA_TEXT, post.content)
