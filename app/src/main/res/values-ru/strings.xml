@@ -8,5 +8,9 @@
     <string name="error_empty_content">Контент не может быть пустым</string>
     <string name="menu_edit">Редактировать</string>
     <string name="chooser_share_post">Поделиться</string>
+    <string name="channel_remote_name">Уведомления с сервера</string>
+    <string name="channel_remote_description">Уведомления с удалённого сервера</string>
+    <string name="notification_user_liked">%1$s поставил лайк посту %2$s</string>
+    <string name="notification_new_post">%s опубликовал новый пост</string>
     <string name="edit_post">Редактировать пост</string>
 </resources>
