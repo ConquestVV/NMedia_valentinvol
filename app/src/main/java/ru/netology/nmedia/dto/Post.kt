@@ -4,11 +4,11 @@ data class Post(
     val id: Long,
     val author: String,
     val content: String,
-    val published: String,
-    val likes: Int = 0,
-    val shares: Int = 0,
-    val watches: Int = 0,
+    val published: Long,
     val likedByMe: Boolean = false,
-    val sharedByMe: Boolean = false,
-    val video: String? = null
+    val likes: Int = 0,
+//    val shares: Int = 0,
+//    val watches: Int = 0,
+//    val sharedByMe: Boolean = false,
+//    val video: String? = null
 )

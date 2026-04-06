@@ -58,23 +58,23 @@ class PostViewHolder(
     fun bind(post: Post) {
         binding.apply {
             author.text = post.author
-            published.text = post.published
+            published.text = post.published.toString()
             content.text = post.content
 
             likeImg.isChecked = post.likedByMe
 
             likeImg?.text = formatCount(post.likes)
 
-            shareImg?.text = formatCount(post.shares)
-
-            watchersCount?.text = formatCount(post.watches)
-
-            post.video?.let { videoLink ->
-                video?.setOnClickListener {
-                    onInteractionListener.onVideoClick(videoLink)
-                }
-            }
-            videoGroup.isVisible = post.video != null
+//            shareImg?.text = formatCount(post.shares)
+//
+//            watchersCount?.text = formatCount(post.watches)
+//
+//            post.video?.let { videoLink ->
+//                video?.setOnClickListener {
+//                    onInteractionListener.onVideoClick(videoLink)
+//                }
+//            }
+//            videoGroup.isVisible = post.video != null
 
 
 
