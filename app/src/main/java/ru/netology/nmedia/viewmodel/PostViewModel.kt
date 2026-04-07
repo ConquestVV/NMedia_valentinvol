@@ -50,21 +50,21 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         val post = data.value?.posts?.find { it.id == id } ?: return
 
         thread {
-            repository.like(id, post.likedByMe)
-            val posts = repository.getData()
+//            repository.like(id, post.likedByMe)
+//            val posts = repository.getData()
+
+            val post = repository.like(id, post.likedByMe)
+            val updatedPosts = data.value?.posts.orEmpty()
+                .map { if (it.id == post.id) post else it }
 
             _data.postValue(
                 FeedModel(
-                    posts = posts,
-                    empty = posts.isEmpty()
+                    posts = updatedPosts,
+                    empty = updatedPosts.isEmpty()
                 )
             )
         }
     }
-
-//    fun share(id: Long) {
-//        repository.share(id)
-//    }
 
     fun remove(id: Long) {
         repository.remove(id)
@@ -83,13 +83,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-
     fun edit(post: Post) {
         edited.value = post
     }
-
-    fun cancelEdit(){
-        edited.value = empty
-    }
-
 }

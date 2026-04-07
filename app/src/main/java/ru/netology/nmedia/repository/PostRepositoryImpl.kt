@@ -35,11 +35,11 @@ class PostRepositoryImpl: PostRepository {
             }
     }
 
-    override fun like(id: Long, likedByMe: Boolean) {
+    override fun like(id: Long, likedByMe: Boolean) : Post{
         val request: Request = Request.Builder()
             .url("${BASE_URL}/api/posts/$id/likes")
             .let{
-                if(likedByMe) {
+                if (likedByMe) {
                     it.delete()
                 } else {
                     it.post("".toRequestBody(null))
@@ -49,7 +49,10 @@ class PostRepositoryImpl: PostRepository {
 
         return client.newCall(request)
             .execute()
-            .close()
+            .use { response ->
+                val body = response.body?.string() ?: throw RuntimeException("body is null")
+                gson.fromJson(body, Post::class.java)
+            }
 
     }
 
