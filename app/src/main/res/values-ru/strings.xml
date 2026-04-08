@@ -13,4 +13,7 @@
     <string name="notification_user_liked">%1$s поставил лайк посту %2$s</string>
     <string name="notification_new_post">%s опубликовал новый пост</string>
     <string name="edit_post">Редактировать пост</string>
+    <string name="error_loading">Что-то пошло не так. Попробуйте позже.</string>
+    <string name="retry_loading">Повторить</string>
+    <string name="empty_posts">Пока постов нет.</string>
 </resources>

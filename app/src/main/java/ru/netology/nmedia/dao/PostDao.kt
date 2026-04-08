@@ -28,12 +28,12 @@ interface PostDao {
         """)
     fun like(id: Long)
 
-    @Query("""
-        UPDATE PostEntity SET
-               shares = shares + 1
-        WHERE id = :id;
-        """)
-    fun share(id: Long)
+//    @Query("""
+//        UPDATE PostEntity SET
+//               shares = shares + 1
+//        WHERE id = :id;
+//        """)
+//    fun share(id: Long)
 
     @Query("DELETE FROM PostEntity WHERE id = :id")
     fun remove(id: Long)

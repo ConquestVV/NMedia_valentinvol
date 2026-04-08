@@ -43,27 +43,27 @@ class PostFragment : Fragment() {
                 }
             }
 
-        viewModel.data.observe(viewLifecycleOwner) { posts ->
-             val post = posts.find { it.id == id } ?: return@observe
+        viewModel.data.observe(viewLifecycleOwner) { feedModel ->
+            val post = feedModel.posts.find { it.id == id } ?: return@observe
 
 
-             binding.cardPost.apply {
-                 author.text = post.author
-                 published.text = post.published
-                 content.text = post.content
+            binding.cardPost.apply {
+                author.text = post.author
+                published.text = post.published.toString()
+                content.text = post.content
 
-                 likeImg.isChecked = post.likedByMe
+                likeImg.isChecked = post.likedByMe
 
-                 likeImg?.text = formatCount(post.likes)
+                likeImg?.text = formatCount(post.likes)
 
-                 shareImg?.text = formatCount(post.shares)
+//                shareImg?.text = formatCount(post.shares)
 
-                 watchersCount?.text = formatCount(post.watches)
+//                watchersCount?.text = formatCount(post.watches)
 
-                 likeImg?.setOnClickListener {
+                likeImg?.setOnClickListener {
 //                     onInteractionListener.onLike(post)
-                     viewModel.like(post.id)
-                 }
+                    viewModel.like(post.id)
+                }
 
                 shareImg.setOnClickListener {
 //                    viewModel.share(post.id)
@@ -77,30 +77,30 @@ class PostFragment : Fragment() {
                     startActivity(shareIntent)
                 }
 
-                 more.setOnClickListener {
-                     PopupMenu(it.context, it).apply {
-                         inflate(R.menu.options_post)
-                         setOnMenuItemClickListener { item ->
-                             when (item.itemId) {
-                                 R.id.remove -> {
+                more.setOnClickListener {
+                    PopupMenu(it.context, it).apply {
+                        inflate(R.menu.options_post)
+                        setOnMenuItemClickListener { item ->
+                            when (item.itemId) {
+                                R.id.remove -> {
 //                                     onInteractionListener.onRemove(post)
-                                     viewModel.remove(post.id)
-                                     findNavController().navigateUp()
-                                     true
-                                 }
-                                 R.id.edit -> {
+                                    viewModel.remove(post.id)
+                                    findNavController().navigateUp()
+                                    true
+                                }
+                                R.id.edit -> {
 //                                     onInteractionListener.onEdit(post)
-                                     viewModel.edit(post)
-                                     findNavController().navigate(
-                                         R.id.action_postFragment_to_newPostFragment
-                                     )
-                                     true
-                                 }
-                                 else -> false
-                             }
-                         }
-                     }.show()
-                 }
+                                    viewModel.edit(post)
+                                    findNavController().navigate(
+                                        R.id.action_postFragment_to_newPostFragment
+                                    )
+                                    true
+                                }
+                                else -> false
+                            }
+                        }
+                    }.show()
+                }
             }
         }
 

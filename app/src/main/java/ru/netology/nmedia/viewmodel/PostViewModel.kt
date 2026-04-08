@@ -2,73 +2,88 @@ package ru.netology.nmedia.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryFilesImpl
-import ru.netology.nmedia.repository.PostRepositoryInMemory
-import ru.netology.nmedia.repository.PostRepositoryRoomImpl
-import ru.netology.nmedia.repository.PostRepositorySharedPrefsImpl
+import ru.netology.nmedia.repository.PostRepositoryImpl
+import kotlin.concurrent.thread
+import ru.netology.nmedia.util.SingleLiveEvent
+import java.io.IOException
 
 private val empty = Post(
     id = 0,
     author = "Нетология. Университет интернет-профессий будущего",
     content = "",
-    published = "Сейчас",
+    published = 0,
     likes = 0,
     likedByMe = false
 )
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryRoomImpl(
-        AppDb.getInstance(application).postDao
-    )
+    private val repository: PostRepository = PostRepositoryImpl()
+    private val _data = MutableLiveData(FeedModel())
+    val data: LiveData<FeedModel>
+        get() = _data
+    val edited = MutableLiveData(empty)
+    private val _postCreated = SingleLiveEvent<Unit>()
+    val postCreated: LiveData<Unit>
+        get() = _postCreated
 
-    val data = repository.getData()
-
-    fun like(id: Long) {
-        repository.like(id)
+    init {
+        loadPosts()
     }
 
-    fun share(id: Long) {
-        repository.share(id)
+    fun loadPosts() {
+        thread {
+            _data.postValue(FeedModel(loading = true))
+            try {
+                val posts = repository.getData()
+                FeedModel(posts = posts, empty = posts.isEmpty())
+            } catch (e: IOException) {
+                FeedModel(error = true)
+            }.also(_data::postValue)
+        }
+    }
+
+    fun like(id: Long) {
+        val post = data.value?.posts?.find { it.id == id } ?: return
+
+        thread {
+//            repository.like(id, post.likedByMe)
+//            val posts = repository.getData()
+
+            val post = repository.like(id, post.likedByMe)
+            val updatedPosts = data.value?.posts.orEmpty()
+                .map { if (it.id == post.id) post else it }
+
+            _data.postValue(
+                FeedModel(
+                    posts = updatedPosts,
+                    empty = updatedPosts.isEmpty()
+                )
+            )
+        }
     }
 
     fun remove(id: Long) {
         repository.remove(id)
     }
 
-    val edited = MutableLiveData(empty)
-
     fun save(content: String) {
-        edited.value?.let {
-            val text = content.trim()
-            if (it.content != text) {
-                repository.save(it.copy(content = text))
+        thread {
+            edited.value?.let {
+                val text = content.trim()
+                if (it.content != text) {
+                    repository.save(it.copy(content = text))
+                }
             }
+            _postCreated.postValue(Unit)
+            edited.postValue(empty)
         }
-        edited.value = empty
     }
-
-//    fun edit(post: Post) {
-//        edited.value = post
-//    }
-
-//    fun edit(id: Long, content: String) {
-//        val text = content.trim()
-//        if (text.isBlank()) return
-//
-//        val post = data.value?.find { it.id == id } ?: return
-//        repository.save(post.copy(content = text))
-//    }
 
     fun edit(post: Post) {
         edited.value = post
     }
-
-    fun cancelEdit(){
-        edited.value = empty
-    }
-
 }
