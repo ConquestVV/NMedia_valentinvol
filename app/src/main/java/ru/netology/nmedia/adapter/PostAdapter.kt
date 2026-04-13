@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
@@ -61,22 +62,20 @@ class PostViewHolder(
             published.text = post.published.toString()
             content.text = post.content
 
+            val avatarView = binding.avatar
+
+            post.authorAvatar?.let { imageName ->
+                val url = "http://10.0.2.2:9999/avatars/$imageName"
+                Glide.with(avatarView.context)
+                    .load(url)
+                    .placeholder(R.drawable.ic_loading_100dp)
+                    .error(R.drawable.ic_error_100dp)
+                    .into(avatarView)
+            } ?: avatarView.setImageResource(R.drawable.ic_error_100dp)
+
             likeImg.isChecked = post.likedByMe
 
             likeImg?.text = formatCount(post.likes)
-
-//            shareImg?.text = formatCount(post.shares)
-//
-//            watchersCount?.text = formatCount(post.watches)
-//
-//            post.video?.let { videoLink ->
-//                video?.setOnClickListener {
-//                    onInteractionListener.onVideoClick(videoLink)
-//                }
-//            }
-//            videoGroup.isVisible = post.video != null
-
-
 
             likeImg?.setOnClickListener {
                 onInteractionListener.onLike(post)
