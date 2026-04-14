@@ -70,6 +70,8 @@ class PostViewHolder(
                     .load(url)
                     .placeholder(R.drawable.ic_loading_100dp)
                     .error(R.drawable.ic_error_100dp)
+                    .circleCrop()
+                    .timeout(10_000)
                     .into(avatarView)
             } ?: avatarView.setImageResource(R.drawable.ic_error_100dp)
 
