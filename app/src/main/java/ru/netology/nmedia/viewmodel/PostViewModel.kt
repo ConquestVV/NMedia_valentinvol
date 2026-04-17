@@ -18,7 +18,8 @@ private val empty = Post(
     content = "",
     published = 0,
     likes = 0,
-    likedByMe = false
+    likedByMe = false,
+    authorAvatar = "null",
 )
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositoryImpl()
