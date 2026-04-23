@@ -15,21 +15,21 @@ interface PostRepository {
 
     interface GetDataCallback {
         fun onSuccess(posts: List<Post>) {}
-        fun onError(e: Exception) {}
+        fun onError(e: Throwable) {}
     }
 
     interface LikeCallback {
         fun onSuccess(post: Post) {}
-        fun onError(e: Exception) {}
+        fun onError(e: Throwable) {}
     }
 
     interface RemoveCallback {
         fun onSuccess() {}
-        fun onError(e: Exception) {}
+        fun onError(e: Throwable) {}
     }
 
     interface SaveCallback {
         fun onSuccess(post: Post) {}
-        fun onError(e: Exception) {}
+        fun onError(e: Throwable) {}
     }
 }

@@ -2,6 +2,7 @@ package ru.netology.nmedia.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,18 +30,6 @@ class FeedFragment : Fragment() {
 
         val viewModel: PostViewModel by activityViewModels()
 
-//        val newPostLauncher = registerForActivityResult(NewPostResultContract) { result ->
-//            result ?: return@registerForActivityResult
-//
-//            val (id, content) = result
-//
-//            if (id == 0L) {
-//                viewModel.save(content)
-//            } else {
-//                viewModel.edit(id = id, content = content)
-//            }
-//        }
-
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -54,18 +43,6 @@ class FeedFragment : Fragment() {
             override fun onLike(post: Post) {
                 viewModel.like(post.id)
             }
-
-//            override fun onShare(post: Post) {
-//                viewModel.share(post.id)
-//                val intent = Intent().apply {
-//                    action = Intent.ACTION_SEND
-//                    putExtra(Intent.EXTRA_TEXT, post.content)
-//                    type = "text/plain"
-//                }
-//
-//                val shareIntent = Intent.createChooser(intent, getString(R.string.chooser_share_post))
-//                startActivity(shareIntent)
-//            }
 
             override fun onRemove(post: Post) {
                 viewModel.remove(post.id)
@@ -89,6 +66,7 @@ class FeedFragment : Fragment() {
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
             binding.progress.isVisible = state.loading
+            binding.list.isVisible = !state.loading && !state.error
             binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
         }
@@ -97,19 +75,8 @@ class FeedFragment : Fragment() {
             viewModel.loadPosts()
         }
 
-
-//        viewModel.data.observe(viewLifecycleOwner) { posts ->
-//            val newPost = posts.size > adapter.currentList.size
-//            adapter.submitList(posts){
-//                if (newPost) {
-//                    binding.list.smoothScrollToPosition(0)
-//                }
-//            }
-//        }
-
         binding.add.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
-//            newPostLauncher.launch(null)
         }
 
         return binding.root
