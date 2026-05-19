@@ -30,18 +30,6 @@ class NewPostFragment : Fragment() {
 
         val binding = FragmentNewPostBinding.inflate(layoutInflater)
 
-
-//        val content = intent.getStringExtra(Intent.EXTRA_TEXT)
-//        if (content != null) {
-//            binding.edit.setText(content)
-//            binding.edit.setSelection(content.length)
-//        }
-
-//        arguments?.getString("content")?.let {
-//            binding.edit.setText(it)
-//            arguments?.remove("content")
-//        }
-
         arguments?.textArg?.let {
             binding.edit.setText(it)
             binding.edit.setSelection(it.length)
@@ -55,10 +43,11 @@ class NewPostFragment : Fragment() {
         }
 
         AndroidUtils.showKeyboard(binding.edit)
+
         binding.add.setOnClickListener {
             if (!binding.edit.text.isNullOrBlank()) {
-                val content = binding.edit.text.toString()
-                viewModel.save(content)
+                viewModel.changeContent(binding.edit.text.toString())
+                viewModel.save()
                 AndroidUtils.hideKeyboard(requireView())
             }
         }
