@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import ru.netology.nmedia.R
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
@@ -63,17 +64,31 @@ class FeedFragment : Fragment() {
         })
         binding.list.adapter = adapter
 
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+            binding.progress.isVisible = state.loading
+            binding.swipeRefresh.isRefreshing = state.refreshing
+            if (state.error) {
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry_loading) { viewModel.retry() }
+                    .show()
+            }
+        }
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
-            binding.progress.isVisible = state.loading
-            binding.list.isVisible = !state.loading && !state.error
-            binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
         }
 
-        binding.retryButton.setOnClickListener {
-            viewModel.loadPosts()
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.refreshPosts()
         }
+
+//        viewModel.data.observe(viewLifecycleOwner) { state ->
+//            adapter.submitList(state.posts)
+//            binding.progress.isVisible = state.loading
+//            binding.list.isVisible = !state.loading && !state.error
+//            binding.errorGroup.isVisible = state.error
+//            binding.emptyText.isVisible = state.empty
+//        }
 
         binding.add.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
