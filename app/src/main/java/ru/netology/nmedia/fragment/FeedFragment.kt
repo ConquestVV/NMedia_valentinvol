@@ -78,17 +78,13 @@ class FeedFragment : Fragment() {
             binding.emptyText.isVisible = state.empty
         }
 
+        viewModel.newerCount.observe(viewLifecycleOwner) {
+            println(it)
+        }
+
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.refreshPosts()
         }
-
-//        viewModel.data.observe(viewLifecycleOwner) { state ->
-//            adapter.submitList(state.posts)
-//            binding.progress.isVisible = state.loading
-//            binding.list.isVisible = !state.loading && !state.error
-//            binding.errorGroup.isVisible = state.error
-//            binding.emptyText.isVisible = state.empty
-//        }
 
         binding.add.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
