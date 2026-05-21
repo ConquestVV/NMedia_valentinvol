@@ -15,4 +15,5 @@
     <string name="error_loading">Something went wrong. Try again later</string>
     <string name="retry_loading">Retry</string>
     <string name="empty_posts">There are no posts.</string>
+    <string name="newer_posts">%d new posts</string>
 </resources>

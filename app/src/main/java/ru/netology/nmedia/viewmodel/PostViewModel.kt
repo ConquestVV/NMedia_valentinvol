@@ -38,11 +38,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         .map(::FeedModel)
         .catch { it.printStackTrace() }
         .asLiveData(Dispatchers.Default)
-    val newerCount = data.switchMap {
-        repository.getNewer(it.posts.firstOrNull()?.id ?: 0)
-            .catch { _dataState.postValue(FeedModelState(error = true)) }
-            .asLiveData(Dispatchers.Default)
-    }
+    val newerCount: LiveData<Int> = repository.newerCount
+        .asLiveData(Dispatchers.Default)
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -55,6 +52,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         loadPosts()
+        getNewer()
     }
 
     fun loadPosts() = viewModelScope.launch {
@@ -65,6 +63,20 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
         }
+    }
+
+    private fun getNewer() = viewModelScope.launch {
+        try {
+            repository.getNewer(0)
+                .catch { _dataState.postValue(FeedModelState(error = true)) }
+                .collect {}
+        } catch (e: Exception) {
+            _dataState.postValue(FeedModelState(error = true))
+        }
+    }
+
+    fun showNewer() = viewModelScope.launch {
+        repository.showNewer()
     }
 
     fun like(id: Long) {
