@@ -4,8 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
@@ -29,7 +34,12 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         AppDb.getInstance(application).postDao
     )
     private val _state = MutableLiveData(FeedModelState())
-    val data: LiveData<FeedModel> = repository.data.map(::FeedModel)
+    val data: LiveData<FeedModel> = repository.data
+        .map(::FeedModel)
+        .catch { it.printStackTrace() }
+        .asLiveData(Dispatchers.Default)
+    val newerCount: LiveData<Int> = repository.newerCount
+        .asLiveData(Dispatchers.Default)
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -42,6 +52,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         loadPosts()
+        getNewer()
     }
 
     fun loadPosts() = viewModelScope.launch {
@@ -52,6 +63,20 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
         }
+    }
+
+    private fun getNewer() = viewModelScope.launch {
+        try {
+            repository.getNewer(0)
+                .catch { _dataState.postValue(FeedModelState(error = true)) }
+                .collect {}
+        } catch (e: Exception) {
+            _dataState.postValue(FeedModelState(error = true))
+        }
+    }
+
+    fun showNewer() = viewModelScope.launch {
+        repository.showNewer()
     }
 
     fun like(id: Long) {
@@ -66,26 +91,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 _dataState.value = FeedModelState(error = true)
             }
         }
-
-//        val post = data.value?.posts?.find { it.id == id } ?: return
-//
-//        repository.likeAsync(id, post.likedByMe, object : PostRepository.LikeCallback {
-//            override fun onSuccess(updatedPost: Post) {
-//                val newPosts = data.value?.posts.orEmpty()
-//                    .map { if (it.id == updatedPost.id) updatedPost else it }
-//
-//                _state.postValue(
-//                    FeedModel(
-//                        posts = newPosts,
-//                        empty = newPosts.isEmpty()
-//                    )
-//                )
-//            }
-//
-//            override fun onError(e: Throwable) {
-//                _state.postValue(FeedModel(error = true))
-//            }
-//        })
     }
 
     fun remove(id: Long) {
@@ -99,23 +104,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 _dataState.value = FeedModelState(error = true)
             }
         }
-//        _state.value = _state.value?.copy(loading = true, error = false)
-//        repository.removeAsync(id, object : PostRepository.RemoveCallback {
-//            override fun onSuccess() {
-//                val newPosts = data.value?.posts?.filter { it.id != id }.orEmpty()
-//
-//                _state.postValue(
-//                    FeedModel(
-//                        posts = newPosts,
-//                        empty = newPosts.isEmpty()
-//                    )
-//                )
-//            }
-//
-//            override fun onError(e: Throwable) {
-//                _state.postValue(FeedModel(error = true))
-//            }
-//        })
     }
 
     fun retry() {

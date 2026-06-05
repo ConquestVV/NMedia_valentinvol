@@ -22,6 +22,8 @@ import ru.netology.nmedia.viewmodel.PostViewModel
 
 class FeedFragment : Fragment() {
 
+    private var scrollToTopAfterShowNewer = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,7 +40,6 @@ class FeedFragment : Fragment() {
                     R.id.action_feedFragment_to_newPostFragment,
                     bundleOf("content" to post.content)
                 )
-//                newPostLauncher.launch(post)
             }
 
             override fun onLike(post: Post) {
@@ -74,21 +75,30 @@ class FeedFragment : Fragment() {
             }
         }
         viewModel.data.observe(viewLifecycleOwner) { state ->
-            adapter.submitList(state.posts)
+            adapter.submitList(state.posts) {
+                if (scrollToTopAfterShowNewer) {
+                    binding.list.post {
+                        binding.list.smoothScrollToPosition(0)
+                    }
+                    scrollToTopAfterShowNewer = false
+                }
+            }
             binding.emptyText.isVisible = state.empty
+        }
+
+        viewModel.newerCount.observe(viewLifecycleOwner) { count ->
+            binding.newerCard.isVisible = count > 0
+            binding.newerText.text = getString(R.string.newer_posts, count)
+        }
+
+        binding.showNewerButton.setOnClickListener {
+            scrollToTopAfterShowNewer = true
+            viewModel.showNewer()
         }
 
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.refreshPosts()
         }
-
-//        viewModel.data.observe(viewLifecycleOwner) { state ->
-//            adapter.submitList(state.posts)
-//            binding.progress.isVisible = state.loading
-//            binding.list.isVisible = !state.loading && !state.error
-//            binding.errorGroup.isVisible = state.error
-//            binding.emptyText.isVisible = state.empty
-//        }
 
         binding.add.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
