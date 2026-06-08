@@ -4,8 +4,10 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.TypeConverter
 import kotlinx.coroutines.flow.Flow
 import ru.netology.nmedia.entity.PostEntity
+import ru.netology.nmedia.enumeration.AttachmentType
 
 @Dao
 interface PostDao {
@@ -44,16 +46,16 @@ interface PostDao {
         """)
     fun like(id: Long)
 
-//    @Query("""
-//        UPDATE PostEntity SET
-//               shares = shares + 1
-//        WHERE id = :id;
-//        """)
-//    fun share(id: Long)
-
     @Query("SELECT * FROM PostEntity WHERE id = :id LIMIT 1")
     suspend fun getById(id: Long): PostEntity?
 
     @Query("DELETE FROM PostEntity WHERE id = :id")
     suspend fun remove(id: Long)
+}
+
+class Converters {
+    @TypeConverter
+    fun toAttachmentType(value: String) = enumValueOf<AttachmentType>(value)
+    @TypeConverter
+    fun fromAttachmentType(value: AttachmentType) = value.name
 }
