@@ -73,6 +73,9 @@ dependencies {
     implementation(libs.play.services)
     coreLibraryDesugaring(libs.desugaring)
     testImplementation(libs.junit)
+    implementation(libs.imagepicker)
+    implementation(libs.ucrop)
+    implementation(libs.coil)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

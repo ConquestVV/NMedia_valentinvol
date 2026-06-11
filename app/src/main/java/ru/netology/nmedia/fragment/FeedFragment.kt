@@ -56,6 +56,16 @@ class FeedFragment : Fragment() {
                 }
             }
 
+            override fun onImage(post: Post) {
+                val url = "http://10.0.2.2:9999/media/${post.attachment?.url}"
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_imageFragment,
+                    Bundle().apply {
+                        putString("imageUrl", url)
+                    }
+                )
+            }
+
             override fun onPostClick(post: Post) {
                 findNavController().navigate(
                     R.id.action_feedFragment_to_postFragment,
